@@ -1,4 +1,4 @@
-# CLI Logging
+# CLI Logging - Windows CLI Command Tracking & Logging
 
 <div align="center">
 
@@ -8,13 +8,13 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
-A local-first desktop app to track, search, and analyze your PowerShell command history.
+A local-first desktop app for command tracking, CLI logging, and PowerShell/CMD history insights on Windows.
 
 </div>
 
 ---
 
-## Overview
+## Overview: CLI Tracking, Command Logging, and History Insights
 
 CLI Logging helps developers understand terminal usage patterns without sending data to external services.
 
@@ -24,7 +24,7 @@ It watches local PowerShell history files, categorizes commands automatically, s
 
 ![CLI Logging Dashboard](assets/cli-logging-dashboard.png)
 
-## Key Features
+## Key Features for Command Tracking and CLI Logging
 
 - Live command ingestion from PowerShell history files
 - Fast local storage with SQLite (`sql.js`)
@@ -41,7 +41,7 @@ It watches local PowerShell history files, categorizes commands automatically, s
 - Global toggle shortcut: `Ctrl + Shift + L`
 - Clean frameless desktop experience
 
-## How It Works
+## How It Works: PowerShell/CMD Command Tracking Pipeline
 
 1. The app watches PowerShell history files under `%APPDATA%`.
 2. New command lines are captured in near real time.
@@ -49,7 +49,7 @@ It watches local PowerShell history files, categorizes commands automatically, s
 4. Commands are stored in a local DB with timestamp, source, category, and frequency.
 5. React UI fetches this data via secure Electron IPC and renders command views + analytics.
 
-## Architecture
+## Architecture: Desktop Command Logger Design
 
 ```mermaid
 flowchart LR
@@ -105,36 +105,36 @@ npm run build
 
 Installer output is generated in `release/`.
 
-## Project Structure
+## Project Structure: Source Layout for CLI Logging
 
 ```text
 cli-logging/
-├─ electron/
-│  ├─ main.cjs            # Electron app lifecycle, window, IPC, shortcuts
-│  ├─ preload.cjs         # Secure API surface for renderer (contextBridge)
-│  ├─ database.cjs        # Local DB init, CRUD, stats, history import
-│  ├─ watcher.cjs         # File watching for PowerShell history updates
-│  ├─ categorizer.cjs     # Command-to-category matching rules
-│  └─ tray.cjs            # System tray menu + quick app controls
-├─ src/
-│  ├─ App.tsx             # Main shell and view routing (home/stats/settings)
-│  ├─ components/
-│  │  ├─ Sidebar.tsx      # Navigation + category filters + quick counters
-│  │  ├─ SearchBar.tsx    # Search, shortcuts, category chips
-│  │  ├─ CommandList.tsx  # Grouped command timeline + virtualized loading
-│  │  ├─ CommandCard.tsx  # Individual command row UI
-│  │  ├─ StatsPanel.tsx   # Charts and usage analytics
-│  │  └─ SettingsPanel.tsx# Import/clear actions + preference UI
-│  ├─ types/
-│  │  └─ index.ts         # Shared command/stats/API TypeScript contracts
-│  ├─ main.tsx            # React entry point
-│  └─ index.css           # Tailwind + theme styling
-├─ public/                # Static assets
-├─ assets/                # README/demo assets
-├─ electron-builder.yml   # Windows packaging config
-├─ tailwind.config.js     # Tailwind theme + tokens
-├─ vite.config.ts         # Vite build/dev config
-└─ package.json           # Scripts and dependencies
+|-- electron/
+|   |-- main.cjs             # Electron app lifecycle, window, IPC, shortcuts
+|   |-- preload.cjs          # Secure API surface for renderer (contextBridge)
+|   |-- database.cjs         # Local DB init, CRUD, stats, history import
+|   |-- watcher.cjs          # File watching for PowerShell history updates
+|   |-- categorizer.cjs      # Command-to-category matching rules
+|   `-- tray.cjs             # System tray menu + quick app controls
+|-- src/
+|   |-- App.tsx              # Main shell and view routing (home/stats/settings)
+|   |-- components/
+|   |   |-- Sidebar.tsx      # Navigation + category filters + quick counters
+|   |   |-- SearchBar.tsx    # Search, shortcuts, category chips
+|   |   |-- CommandList.tsx  # Grouped command timeline + virtualized loading
+|   |   |-- CommandCard.tsx  # Individual command row UI
+|   |   |-- StatsPanel.tsx   # Charts and usage analytics
+|   |   `-- SettingsPanel.tsx# Import/clear actions + preference UI
+|   |-- types/
+|   |   `-- index.ts         # Shared command/stats/API TypeScript contracts
+|   |-- main.tsx             # React entry point
+|   `-- index.css            # Tailwind + theme styling
+|-- public/                  # Static assets
+|-- assets/                  # README/demo assets
+|-- electron-builder.yml     # Windows packaging config
+|-- tailwind.config.js       # Tailwind theme + tokens
+|-- vite.config.ts           # Vite build/dev config
+`-- package.json             # Scripts and dependencies
 ```
 
 ### Module Responsibilities
