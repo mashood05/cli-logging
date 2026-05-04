@@ -173,4 +173,4 @@ Contributions are welcome.
 
 ## License
 
-MIT (recommended for open source). Add a `LICENSE` file to finalize.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
