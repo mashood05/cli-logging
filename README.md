@@ -51,24 +51,25 @@ It watches local PowerShell history files, categorizes commands automatically, s
 
 ## Architecture
 
-```text
-PowerShell History Files
-        |
-        v
-electron/watcher.cjs (chokidar)
-        |
-        v
-electron/database.cjs (sql.js)
-        |
-        v
-electron/main.cjs (IPC handlers)
-        |
-        v
-electron/preload.cjs (secure API bridge)
-        |
-        v
-React UI (src/*)
+```mermaid
+flowchart LR
+    A["PowerShell History Files<br/>(%APPDATA%/.../PSReadLine/*_history.txt)"] --> B["Watcher Layer<br/>electron/watcher.cjs<br/>(chokidar + polling fallback)"]
+    B --> C["Data Layer<br/>electron/database.cjs<br/>(sql.js local DB)"]
+    C --> D["App Core<br/>electron/main.cjs<br/>(IPC handlers + lifecycle)"]
+    D --> E["Secure Bridge<br/>electron/preload.cjs<br/>(contextBridge API)"]
+    E --> F["Renderer UI<br/>src/App.tsx + components/*<br/>(React + Tailwind)"]
+    C --> G["Categorization Engine<br/>electron/categorizer.cjs<br/>(rule-based labels)"]
+    D --> H["System Tray + Global Shortcut<br/>electron/tray.cjs + Ctrl+Shift+L"]
 ```
+
+### Runtime Flow
+
+1. `watcher.cjs` detects new terminal history lines.
+2. `database.cjs` stores normalized command records locally.
+3. `categorizer.cjs` assigns category labels (Git, Docker, npm, etc.).
+4. `main.cjs` exposes command/stat APIs through IPC handlers.
+5. `preload.cjs` safely bridges APIs into the renderer.
+6. React UI renders command feed, filters, and analytics in real time.
 
 ## Tech Stack
 
@@ -107,19 +108,40 @@ Installer output is generated in `release/`.
 ## Project Structure
 
 ```text
-electron/
-  main.cjs          # Electron lifecycle + IPC
-  preload.cjs       # contextBridge API
-  database.cjs      # local DB and stats queries
-  watcher.cjs       # command history watcher
-  categorizer.cjs   # rule-based command categorization
-  tray.cjs          # system tray menu
-
-src/
-  App.tsx
-  components/
-  types/
+cli-logging/
+├─ electron/
+│  ├─ main.cjs            # Electron app lifecycle, window, IPC, shortcuts
+│  ├─ preload.cjs         # Secure API surface for renderer (contextBridge)
+│  ├─ database.cjs        # Local DB init, CRUD, stats, history import
+│  ├─ watcher.cjs         # File watching for PowerShell history updates
+│  ├─ categorizer.cjs     # Command-to-category matching rules
+│  └─ tray.cjs            # System tray menu + quick app controls
+├─ src/
+│  ├─ App.tsx             # Main shell and view routing (home/stats/settings)
+│  ├─ components/
+│  │  ├─ Sidebar.tsx      # Navigation + category filters + quick counters
+│  │  ├─ SearchBar.tsx    # Search, shortcuts, category chips
+│  │  ├─ CommandList.tsx  # Grouped command timeline + virtualized loading
+│  │  ├─ CommandCard.tsx  # Individual command row UI
+│  │  ├─ StatsPanel.tsx   # Charts and usage analytics
+│  │  └─ SettingsPanel.tsx# Import/clear actions + preference UI
+│  ├─ types/
+│  │  └─ index.ts         # Shared command/stats/API TypeScript contracts
+│  ├─ main.tsx            # React entry point
+│  └─ index.css           # Tailwind + theme styling
+├─ public/                # Static assets
+├─ assets/                # README/demo assets
+├─ electron-builder.yml   # Windows packaging config
+├─ tailwind.config.js     # Tailwind theme + tokens
+├─ vite.config.ts         # Vite build/dev config
+└─ package.json           # Scripts and dependencies
 ```
+
+### Module Responsibilities
+
+- `electron/*` handles ingestion, persistence, and desktop runtime features.
+- `src/*` handles presentation, interaction, and analytics views.
+- `assets/*` powers visual documentation for open-source readers.
 
 ## Privacy
 
